@@ -2,6 +2,7 @@ import path from 'path';
 import ora from 'ora';
 import { BaseGenerator } from './base-generator.js';
 import type { ProjectConfig } from '../config/schema.js';
+import { DockerComposeGenerator } from './docker-compose-generator.js';
 
 /**
  * Express.js project generator
@@ -33,7 +34,14 @@ export class ExpressGenerator extends BaseGenerator {
       // 3. Generate conditional features
       await this.generateConditionalFeatures(context, spinner);
 
-      // 4. Create empty directories
+      // 4. Generate Docker Compose if enabled
+      if (this.config.includeDocker) {
+        spinner.text = 'Generating Docker Compose configuration...';
+        const dockerGenerator = new DockerComposeGenerator(this.config, this.projectPath);
+        await dockerGenerator.generate();
+      }
+
+      // 5. Create empty directories
       await this.createEmptyDirectories();
 
       spinner.succeed('Express.js project generated successfully!');
