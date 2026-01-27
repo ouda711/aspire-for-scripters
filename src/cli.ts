@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import figlet from 'figlet';
+import { initCommand } from './commands/init.js';
 
 const program = new Command();
 
@@ -21,31 +22,29 @@ program
   .description('Application orchestration and initialization tool for JavaScript/TypeScript frameworks')
   .version('0.1.0');
 
-// Main init command (placeholder for now)
+// Init command - now fully functional with prompts
 program
   .command('init [project-name]')
   .description('Initialize a new Aspire for Scripters project')
-  .action((projectName) => {
-    console.log(chalk.green('✓ Initialize command triggered'));
-    console.log(chalk.blue(`Project name: ${projectName || 'Not specified'}`));
-    console.log(chalk.yellow('\n⚠️  Full implementation coming in next steps...'));
+  .action(async (projectName?: string) => {
+    await initCommand(projectName);
   });
 
-// Dev command (placeholder)
+// Dev command (still placeholder)
 program
   .command('dev')
   .description('Start all services in development mode')
   .action(() => {
-    console.log(chalk.yellow('⚠️  Dev command - Implementation coming soon...'));
+    console.log(chalk.yellow('⚠️  Dev command - Implementation coming in later steps...'));
   });
 
 // Version info
 program.on('--help', () => {
   console.log('');
   console.log(chalk.cyan('Examples:'));
-  console.log('  $ aspire-for-scripters init my-app');
-  console.log('  $ afs init my-app');
-  console.log('  $ afs dev');
+  console.log('  $ aspire-for-scripters init              # Interactive mode');
+  console.log('  $ aspire-for-scripters init my-app       # Quick mode with defaults');
+  console.log('  $ afs init                               # Shorthand');
 });
 
 program.parse(process.argv);

@@ -1,6 +1,7 @@
 {
   "name": "aspire-for-scripters",
   "version": "0.1.0",
+  "type": "module",
   "description": "Application orchestration and initialization tool for JavaScript/TypeScript frameworks",
   "main": "dist/cli.js",
   "bin": {
