@@ -1,0 +1,19 @@
+import { Server } from 'http';
+import { createApp } from './app.js';
+{{#if hasDatabase}}
+import { connectDatabase } from './database/connection.js';
+{{/if}}
+
+/**
+ * Create and configure HTTP server
+ */
+export async function createServer(): Promise<Server> {
+  {{#if hasDatabase}}
+  // Connect to database
+  await connectDatabase();
+  {{/if}}
+
+  const app = createApp();
+  
+  return app as any as Server;
+}

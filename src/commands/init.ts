@@ -6,6 +6,7 @@ import { runPrompts } from '../prompts/index.js';
 import { logger } from '../utils/logger.js';
 import { ConfigManager } from '../config/config-manager.js';
 import { getDefaultConfig } from '../config/defaults.js';
+import { createGenerator } from '../generators/index.js';
 import type { ProjectConfig } from '../config/schema.js';
 
 /**
@@ -45,7 +46,7 @@ export async function initCommand(projectName?: string): Promise<void> {
  * Create the project structure
  */
 async function createProject(config: ProjectConfig): Promise<void> {
-  const spinner = ora('Creating project structure...').start();
+  const spinner = ora('Creating project...').start();
 
   try {
     const projectPath = path.resolve(process.cwd(), config.name);
@@ -62,10 +63,14 @@ async function createProject(config: ProjectConfig): Promise<void> {
 
     // Save configuration using ConfigManager
     await ConfigManager.save(projectPath, config);
-    spinner.succeed('Project configuration saved');
+    spinner.text = 'Configuration saved';
 
-    // TODO: In next steps, we'll generate files here
-    spinner.info('Template generation coming in Step 1.4...');
+    // Generate project files using appropriate generator
+    spinner.stop();
+    const generator = createGenerator(config, projectPath);
+    await generator.generate();
+
+    logger.success('Project created successfully!');
   } catch (error) {
     spinner.fail();
     throw error;
@@ -79,12 +84,22 @@ function displaySuccessMessage(config: ProjectConfig): void {
   console.log('\n' + chalk.green.bold('✓ Project initialized successfully!') + '\n');
 
   console.log(chalk.cyan('Next steps:') + '\n');
-  console.log(`  ${chalk.gray('$')} cd ${config.name}`);
-  console.log(`  ${chalk.gray('$')} ${config.packageManager} install`);
-  console.log(`  ${chalk.gray('$')} ${config.packageManager} run dev`);
-  console.log('');
+  console.log(`  ${chalk.gray('1.')} cd ${config.name}`);
+  console.log(`  ${chalk.gray('2.')} ${config.packageManager} install`);
+  
+  if (config.includeDocker) {
+    console.log(`  ${chalk.gray('3.')} docker-compose up -d  ${chalk.dim('(start services)')}`);
+    console.log(`  ${chalk.gray('4.')} ${config.packageManager} run dev`);
+  } else {
+    console.log(`  ${chalk.gray('3.')} ${config.packageManager} run dev`);
+  }
 
-  console.log(chalk.gray('Configuration saved to .aspire-config.json'));
-  console.log(chalk.gray('You can modify it before generating files.'));
+  console.log('');
+  
+  if (config.includeSwagger) {
+    console.log(chalk.gray('📚 API Documentation will be available at: http://localhost:3000/api-docs'));
+  }
+  
+  console.log(chalk.gray('📄 Configuration saved to .aspire-config.json'));
   console.log('');
 }

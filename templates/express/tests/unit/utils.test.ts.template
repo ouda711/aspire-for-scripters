@@ -1,0 +1,19 @@
+import { ApiResponse } from '../../src/utils/response';
+
+describe('ApiResponse', () => {
+  it('should create success response', () => {
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as any;
+
+    ApiResponse.success(mockRes, { test: 'data' }, 'Success', 200);
+
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalledWith({
+      status: 'success',
+      message: 'Success',
+      data: { test: 'data' },
+    });
+  });
+});

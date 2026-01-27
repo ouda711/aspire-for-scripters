@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+{{#if hasPostgres}}
+      - postgres
+{{/if}}
+{{#if hasMySQL}}
+      - mysql
+{{/if}}
+{{#if hasMongoDB}}
+      - mongodb
+{{/if}}
+{{#if hasRedis}}
+      - redis
+{{/if}}
+
+{{#if hasPostgres}}
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: {{name}}
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+{{/if}}
+
+{{#if hasMySQL}}
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: {{name}}
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+{{/if}}
+
+{{#if hasMongoDB}}
+  mongodb:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+{{/if}}
+
+{{#if hasRedis}}
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+{{/if}}
+
+volumes:
+{{#if hasPostgres}}
+  postgres_data:
+{{/if}}
+{{#if hasMySQL}}
+  mysql_data:
+{{/if}}
+{{#if hasMongoDB}}
+  mongodb_data:
+{{/if}}

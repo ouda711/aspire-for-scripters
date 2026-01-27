@@ -1,0 +1,61 @@
+{{#if hasPostgres}}
+import { Pool } from 'pg';
+import { databaseConfig } from '../config/database.config.js';
+{{#if includeLogging}}
+import { logger } from '../utils/logger.js';
+{{/if}}
+
+export const pool = new Pool({
+  connectionString: databaseConfig.postgres.url,
+});
+
+export async function connectDatabase() {
+  try {
+    await pool.query('SELECT NOW()');
+    {{#if includeLogging}}
+    logger.info('PostgreSQL database connected');
+    {{else}}
+    console.log('PostgreSQL database connected');
+    {{/if}}
+  } catch (error) {
+    {{#if includeLogging}}
+    logger.error('Failed to connect to database:', error);
+    {{else}}
+    console.error('Failed to connect to database:', error);
+    {{/if}}
+    process.exit(1);
+  }
+}
+{{else if hasMySQL}}
+import mysql from 'mysql2/promise';
+import { databaseConfig } from '../config/database.config.js';
+
+export let connection: mysql.Connection;
+
+export async function connectDatabase() {
+  try {
+    connection = await mysql.createConnection(databaseConfig.mysql.url);
+    console.log('MySQL database connected');
+  } catch (error) {
+    console.error('Failed to connect to database:', error);
+    process.exit(1);
+  }
+}
+{{else if hasMongoDB}}
+import mongoose from 'mongoose';
+import { databaseConfig } from '../config/database.config.js';
+
+export async function connectDatabase() {
+  try {
+    await mongoose.connect(databaseConfig.mongodb.uri);
+    console.log('MongoDB database connected');
+  } catch (error) {
+    console.error('Failed to connect to database:', error);
+    process.exit(1);
+  }
+}
+{{else}}
+export async function connectDatabase() {
+  // No database configured
+}
+{{/if}}

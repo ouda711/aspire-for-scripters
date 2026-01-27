@@ -1,0 +1,4 @@
+Hello, {{name}}!
+{{#if showGreeting}}
+Welcome to {{projectName}}!
+{{/if}}

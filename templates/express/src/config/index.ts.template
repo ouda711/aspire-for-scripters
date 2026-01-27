@@ -1,0 +1,4 @@
+export * from './app.config.js';
+{{#if hasDatabase}}
+export * from './database.config.js';
+{{/if}}

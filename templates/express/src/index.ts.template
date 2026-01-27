@@ -1,0 +1,35 @@
+import { createServer } from './server.js';
+{{#if includeLogging}}
+import { logger } from './utils/logger.js';
+{{/if}}
+
+/**
+ * Application entry point
+ */
+async function main() {
+  try {
+    const server = await createServer();
+    
+    const port = process.env.PORT || 3000;
+    server.listen(port, () => {
+      {{#if includeLogging}}
+      logger.info(`Server running on port ${port}`);
+      logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      {{#if includeSwagger}}
+      logger.info(`API Documentation: http://localhost:${port}/api-docs`);
+      {{/if}}
+      {{else}}
+      console.log(`Server running on port ${port}`);
+      {{/if}}
+    });
+  } catch (error) {
+    {{#if includeLogging}}
+    logger.error('Failed to start server:', error);
+    {{else}}
+    console.error('Failed to start server:', error);
+    {{/if}}
+    process.exit(1);
+  }
+}
+
+main();

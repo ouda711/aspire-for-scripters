@@ -1,0 +1,22 @@
+export const databaseConfig = {
+  {{#if hasPostgres}}
+  postgres: {
+    url: process.env.DATABASE_URL || 'postgresql://localhost:5432/{{name}}',
+  },
+  {{/if}}
+  {{#if hasMySQL}}
+  mysql: {
+    url: process.env.DATABASE_URL || 'mysql://localhost:3306/{{name}}',
+  },
+  {{/if}}
+  {{#if hasMongoDB}}
+  mongodb: {
+    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/{{name}}',
+  },
+  {{/if}}
+  {{#if hasRedis}}
+  redis: {
+    url: process.env.REDIS_URL || 'redis://localhost:6379',
+  },
+  {{/if}}
+};
