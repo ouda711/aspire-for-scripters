@@ -1,0 +1,83 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  ParseIntPipe,
+} from '@nestjs/common';
+{{#if includeSwagger}}
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+{{/if}}
+{{#if includeAuth}}
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+{{/if}}
+import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+
+{{#if includeSwagger}}
+@ApiTags('users')
+{{#if includeAuth}}
+@ApiBearerAuth()
+{{/if}}
+{{/if}}
+{{#if includeAuth}}
+@UseGuards(JwtAuthGuard)
+{{/if}}
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  {{#if includeSwagger}}
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiResponse({ status: 201, description: 'User created successfully' })
+  {{/if}}
+  @Post()
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
+
+  {{#if includeSwagger}}
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiResponse({ status: 200, description: 'List of users' })
+  {{/if}}
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
+
+  {{#if includeSwagger}}
+  @ApiOperation({ summary: 'Get user by ID' })
+  @ApiResponse({ status: 200, description: 'User found' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  {{/if}}
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findOne(id);
+  }
+
+  {{#if includeSwagger}}
+  @ApiOperation({ summary: 'Update user' })
+  @ApiResponse({ status: 200, description: 'User updated successfully' }}
+  {{/if}}
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.usersService.update(id, updateUserDto);
+  }
+
+  {{#if includeSwagger}}
+  @ApiOperation({ summary: 'Delete user' })
+  @ApiResponse({ status: 200, description: 'User deleted successfully' }}
+  {{/if}}
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.remove(id);
+  }
+}

@@ -1,0 +1,144 @@
+# {{projectNamePascal}}
+
+{{#if description}}{{description}}{{else}}NestJS application generated with Aspire for Scripters{{/if}}
+
+## Description
+
+A NestJS application with:
+- Framework: NestJS
+{{#if sqlDatabase}}
+- Database: {{sqlDatabase}}
+{{/if}}
+{{#if includeAuth}}
+- Authentication: JWT
+{{/if}}
+{{#if includeSwagger}}
+- API Documentation: Swagger/OpenAPI
+{{/if}}
+{{#if includeLogging}}
+- Logging: {{loggingLibrary}}
+{{/if}}
+
+## Installation
+
+```bash
+{{#eq packageManager "npm"}}
+npm install
+{{/eq}}
+{{#eq packageManager "yarn"}}
+yarn install
+{{/eq}}
+{{#eq packageManager "pnpm"}}
+pnpm install
+{{/eq}}
+```
+
+## Running the app
+
+```bash
+# development
+{{#eq packageManager "npm"}}
+npm run start:dev
+{{/eq}}
+{{#eq packageManager "yarn"}}
+yarn start:dev
+{{/eq}}
+{{#eq packageManager "pnpm"}}
+pnpm start:dev
+{{/eq}}
+
+# production mode
+{{#eq packageManager "npm"}}
+npm run start:prod
+{{/eq}}
+{{#eq packageManager "yarn"}}
+yarn start:prod
+{{/eq}}
+{{#eq packageManager "pnpm"}}
+pnpm start:prod
+{{/eq}}
+```
+
+{{#if includeTesting}}
+## Test
+
+```bash
+# unit tests
+{{#eq packageManager "npm"}}
+npm run test
+{{/eq}}
+{{#eq packageManager "yarn"}}
+yarn test
+{{/eq}}
+{{#eq packageManager "pnpm"}}
+pnpm test
+{{/eq}}
+
+# e2e tests
+{{#eq packageManager "npm"}}
+npm run test:e2e
+{{/eq}}
+{{#eq packageManager "yarn"}}
+yarn test:e2e
+{{/eq}}
+{{#eq packageManager "pnpm"}}
+pnpm test:e2e
+{{/eq}}
+
+# test coverage
+{{#eq packageManager "npm"}}
+npm run test:cov
+{{/eq}}
+{{#eq packageManager "yarn"}}
+yarn test:cov
+{{/eq}}
+{{#eq packageManager "pnpm"}}
+pnpm test:cov
+{{/eq}}
+```
+{{/if}}
+
+{{#if includeSwagger}}
+## API Documentation
+
+Once the application is running, visit [http://localhost:3000/api-docs](http://localhost:3000/api-docs) to view the Swagger documentation.
+{{/if}}
+
+## Project Structure
+
+```
+src/
+├── main.ts              # Application entry point
+├── app.module.ts        # Root module
+├── app.controller.ts    # Root controller
+├── app.service.ts       # Root service
+├── config/              # Configuration
+├── common/              # Shared utilities (filters, interceptors, guards)
+├── health/              # Health check module
+{{#if hasDatabase}}
+├── database/            # Database configuration
+{{/if}}
+{{#if includeAuth}}
+├── auth/                # Authentication module
+├── users/               # Users module
+{{/if}}
+{{#if includeLogging}}
+└── logger/              # Logging module
+{{/if}}
+```
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and update the values:
+
+```bash
+cp .env.example .env
+```
+
+## License
+
+MIT
+
+---
+
+Generated with ❤️ by [Aspire for Scripters](https://github.com/ouda-paystack/aspire-for-scripters)

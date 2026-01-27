@@ -1,0 +1,88 @@
+import { Module } from '@nestjs/common';
+{{#if includeLogging}}
+{{#eq loggingLibrary "winston"}}
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
+{{/eq}}
+{{#eq loggingLibrary "pino"}}
+import { LoggerModule } from 'nestjs-pino';
+{{/eq}}
+{{/if}}
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { HealthModule } from './health/health.module';
+{{#if hasDatabase}}
+import { DatabaseModule } from './database/database.module';
+{{/if}}
+{{#if includeAuth}}
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+{{/if}}
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration],
+    }),
+    {{#if includeLogging}}
+    {{#eq loggingLibrary "winston"}}
+    WinstonModule.forRoot({
+      transports: [
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.colorize(),
+            winston.format.printf(({ timestamp, level, message, context }) => {
+              return `${timestamp} [${context}] ${level}: ${message}`;
+            }),
+          ),
+        }),
+        new winston.transports.File({
+          filename: 'logs/error.log',
+          level: 'error',
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.json(),
+          ),
+        }),
+        new winston.transports.File({
+          filename: 'logs/combined.log',
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.json(),
+          ),
+        }),
+      ],
+    }),
+    {{/eq}}
+    {{#eq loggingLibrary "pino"}}
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            translateTime: 'SYS:standard',
+            ignore: 'pid,hostname',
+          },
+        },
+      },
+    }),
+    {{/eq}}
+    {{/if}}
+    HealthModule,
+    {{#if hasDatabase}}
+    DatabaseModule,
+    {{/if}}
+    {{#if includeAuth}}
+    AuthModule,
+    UsersModule,
+    {{/if}}
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}

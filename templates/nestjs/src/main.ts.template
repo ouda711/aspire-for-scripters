@@ -1,0 +1,72 @@
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+{{#if includeSwagger}}
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+{{/if}}
+import { AppModule } from './app.module';
+{{#if includeLogging}}
+{{#eq loggingLibrary "winston"}}
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+{{/eq}}
+{{#eq loggingLibrary "pino"}}
+import { Logger } from 'nestjs-pino';
+{{/eq}}
+{{/if}}
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  {{#if includeLogging}}
+  {{#eq loggingLibrary "winston"}}
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+  {{/eq}}
+  {{#eq loggingLibrary "pino"}}
+  app.useLogger(app.get(Logger));
+  {{/eq}}
+  {{/if}}
+
+  // Global validation pipe
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
+
+  // Enable CORS
+  app.enableCors({
+    origin: process.env.CORS_ORIGIN || '*',
+    credentials: true,
+  });
+
+  // Global prefix
+  app.setGlobalPrefix('api/v1');
+
+  {{#if includeSwagger}}
+  // Swagger documentation
+  const config = new DocumentBuilder()
+    .setTitle('{{projectNamePascal}} API')
+    .setDescription('{{#if description}}{{description}}{{else}}API documentation for {{name}}{{/if}}')
+    .setVersion('1.0')
+    {{#if includeAuth}}
+    .addBearerAuth()
+    {{/if}}
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-docs', app, document);
+  {{/if}}
+
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+
+  console.log(`Application is running on: http://localhost:${port}`);
+  {{#if includeSwagger}}
+  console.log(`Swagger documentation: http://localhost:${port}/api-docs`);
+  {{/if}}
+}
+
+bootstrap();

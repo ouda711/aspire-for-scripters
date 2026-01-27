@@ -1,4 +1,5 @@
 import { ExpressGenerator } from './express-generator.js';
+import { NestJSGenerator } from './nestjs-generator.js';
 import type { ProjectConfig } from '../config/schema.js';
 
 /**
@@ -9,7 +10,7 @@ export function createGenerator(config: ProjectConfig, projectPath: string) {
     case 'express':
       return new ExpressGenerator(config, projectPath);
     case 'nestjs':
-      throw new Error('NestJS generator not yet implemented. Coming in Step 1.5!');
+      return new NestJSGenerator(config, projectPath);
     default:
       throw new Error(`Unsupported framework: ${config.framework}`);
   }
@@ -17,3 +18,4 @@ export function createGenerator(config: ProjectConfig, projectPath: string) {
 
 export { BaseGenerator } from './base-generator.js';
 export { ExpressGenerator } from './express-generator.js';
+export { NestJSGenerator } from './nestjs-generator.js';

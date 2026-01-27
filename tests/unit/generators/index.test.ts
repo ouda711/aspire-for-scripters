@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createGenerator } from '@/generators/index';
 import { ExpressGenerator } from '@/generators/express-generator';
+import { NestJSGenerator } from '@/generators/nestjs-generator';
 import { getDefaultConfig } from '@/config/defaults';
 import type { ProjectConfig } from '@/config/schema';
 
@@ -16,16 +17,16 @@ describe('Generator Factory', () => {
       expect(generator).toBeInstanceOf(ExpressGenerator);
     });
 
-    it('should throw error for nestjs framework', () => {
+    it('should create NestJSGenerator for nestjs framework', () => {
       const config: ProjectConfig = {
         ...getDefaultConfig('test-project'),
         framework: 'nestjs',
       };
       const projectPath = '/tmp/test';
 
-      expect(() => createGenerator(config, projectPath)).toThrow(
-        'NestJS generator not yet implemented'
-      );
+      const generator = createGenerator(config, projectPath);
+
+      expect(generator).toBeInstanceOf(NestJSGenerator);
     });
 
     it('should throw error for unsupported framework', () => {
