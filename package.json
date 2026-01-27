@@ -13,6 +13,9 @@
     "build": "tsup src/cli.ts --format cjs,esm --dts --clean",
     "start": "node dist/cli.js",
     "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:watch": "vitest --watch",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "typecheck": "tsc --noEmit"

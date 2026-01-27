@@ -1,0 +1,6 @@
+{
+  "name": "Invalid Name With Spaces",
+  "framework": "invalid-framework",
+  "sqlDatabase": 123,
+  "includeAuth": "not-a-boolean"
+}

@@ -4,7 +4,9 @@ import ora from 'ora';
 import chalk from 'chalk';
 import { runPrompts } from '../prompts/index.js';
 import { logger } from '../utils/logger.js';
-import type { ProjectConfig } from '../types/index.js';
+import { ConfigManager } from '../config/config-manager.js';
+import { getDefaultConfig } from '../config/defaults.js';
+import type { ProjectConfig } from '../config/schema.js';
 
 /**
  * Initialize a new Aspire for Scripters project
@@ -19,7 +21,7 @@ export async function initCommand(projectName?: string): Promise<void> {
       logger.warning('Quick mode: Using default configuration. Run without project name for custom setup.\n');
       
       // Create minimal config with defaults
-      config = createDefaultConfig(projectName);
+      config = getDefaultConfig(projectName);
     } else {
       // Interactive mode: run full prompts
       config = await runPrompts();
@@ -37,33 +39,6 @@ export async function initCommand(projectName?: string): Promise<void> {
     }
     process.exit(1);
   }
-}
-
-/**
- * Create default configuration for quick mode
- */
-function createDefaultConfig(projectName: string): ProjectConfig {
-  return {
-    name: projectName,
-    packageManager: 'npm',
-    framework: 'express',
-    includeAuth: true,
-    includeSwagger: true,
-    sqlDatabase: 'postgresql',
-    nosqlDatabases: ['redis'],
-    frontend: 'none',
-    monorepo: false,
-    includeDocker: true,
-    includeKubernetes: false,
-    includeMessageQueue: false,
-    includeTesting: true,
-    includeCI: true,
-    ciProvider: 'github',
-    includeHusky: true,
-    includeLogging: true,
-    loggingLibrary: 'pino',
-    includeMetrics: false,
-  };
 }
 
 /**
@@ -85,12 +60,12 @@ async function createProject(config: ProjectConfig): Promise<void> {
     await fs.ensureDir(projectPath);
     spinner.text = 'Project directory created';
 
-    // Save configuration for next steps
-    await fs.writeJson(path.join(projectPath, '.aspire-config.json'), config, { spaces: 2 });
+    // Save configuration using ConfigManager
+    await ConfigManager.save(projectPath, config);
     spinner.succeed('Project configuration saved');
 
     // TODO: In next steps, we'll generate files here
-    spinner.info('Template generation coming in Step 1.3...');
+    spinner.info('Template generation coming in Step 1.4...');
   } catch (error) {
     spinner.fail();
     throw error;

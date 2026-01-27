@@ -40,13 +40,13 @@ export async function runPrompts(): Promise<ProjectConfig> {
     const additionalAnswers = await inquirer.prompt(additionalPrompts);
 
     // Combine all answers
-    const allAnswers: PromptAnswers = {
+    const allAnswers = {
       ...projectAnswers,
       ...backendAnswers,
       ...databaseAnswers,
       ...frontendAnswers,
       ...additionalAnswers,
-    };
+    } as PromptAnswers;
 
     // Transform to ProjectConfig
     const config: ProjectConfig = transformAnswersToConfig(allAnswers);

@@ -1,6 +1,11 @@
 /**
  * Core type definitions for Aspire for Scripters
+ * Re-export types from config/schema for backward compatibility
  */
+
+export type {
+  ProjectConfig,
+} from '../config/schema.js';
 
 export type Framework = 'express' | 'nestjs';
 
@@ -12,46 +17,9 @@ export type Frontend = 'react' | 'nextjs' | 'vue' | 'angular' | 'none';
 
 export type PackageManager = 'npm' | 'yarn' | 'pnpm';
 
-export interface ProjectConfig {
-  // Project basics
-  name: string;
-  description?: string;
-  author?: string;
-  packageManager: PackageManager;
-
-  // Backend
-  framework: Framework;
-  includeAuth: boolean;
-  includeSwagger: boolean;
-
-  // Databases
-  sqlDatabase?: SQLDatabase;
-  nosqlDatabases: NoSQLDatabase[];
-
-  // Frontend
-  frontend: Frontend;
-  monorepo: boolean; // true if frontend is included in same repo
-
-  // Infrastructure
-  includeDocker: boolean;
-  includeKubernetes: boolean;
-  includeMessageQueue: boolean;
-  messageQueue?: 'rabbitmq' | 'bullmq';
-
-  // Development tools
-  includeTesting: boolean;
-  includeCI: boolean;
-  ciProvider?: 'github' | 'gitlab' | 'none';
-  includeHusky: boolean;
-
-  // Observability
-  includeLogging: boolean;
-  loggingLibrary?: 'winston' | 'pino';
-  includeMetrics: boolean;
-}
-
-export interface PromptAnswers extends Omit<ProjectConfig, 'name'> {
+export interface PromptAnswers extends Omit<import('../config/schema.js').ProjectConfig, 'name' | 'sqlDatabase'> {
   projectName: string;
+  sqlDatabase?: SQLDatabase | 'none';
 }
 
 export interface ServiceConfig {

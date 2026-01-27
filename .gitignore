@@ -5,6 +5,10 @@ node_modules/
 dist/
 build/
 
+# Test output
+tests/.test-temp/
+coverage/
+
 # Environment variables
 .env
 .env.local

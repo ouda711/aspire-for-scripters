@@ -1,0 +1,23 @@
+{
+  "name": "test-project",
+  "description": "Test project",
+  "author": "Test Author",
+  "packageManager": "npm",
+  "framework": "express",
+  "includeAuth": true,
+  "includeSwagger": true,
+  "sqlDatabase": "postgresql",
+  "nosqlDatabases": ["redis"],
+  "frontend": "none",
+  "monorepo": false,
+  "includeDocker": true,
+  "includeKubernetes": false,
+  "includeMessageQueue": false,
+  "includeTesting": true,
+  "includeCI": true,
+  "ciProvider": "github",
+  "includeHusky": true,
+  "includeLogging": true,
+  "loggingLibrary": "pino",
+  "includeMetrics": false
+}
