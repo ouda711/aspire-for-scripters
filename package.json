@@ -1,0 +1,58 @@
+{
+  "name": "aspire-for-scripters",
+  "version": "0.1.0",
+  "description": "Application orchestration and initialization tool for JavaScript/TypeScript frameworks",
+  "main": "dist/cli.js",
+  "bin": {
+    "aspire-for-scripters": "dist/cli.js",
+    "afs": "dist/cli.js"
+  },
+  "scripts": {
+    "dev": "tsx watch src/cli.ts",
+    "build": "tsup src/cli.ts --format cjs,esm --dts --clean",
+    "start": "node dist/cli.js",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "cli",
+    "aspire",
+    "express",
+    "nestjs",
+    "typescript",
+    "orchestration",
+    "microservices",
+    "docker",
+    "kubernetes"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.12",
+    "chalk": "^4.1.2",
+    "ora": "^5.4.1",
+    "figlet": "^1.7.0",
+    "fs-extra": "^11.2.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@types/inquirer": "^9.0.7",
+    "@types/figlet": "^1.5.8",
+    "@types/fs-extra": "^11.0.4",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "tsup": "^8.0.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
