@@ -3,6 +3,7 @@ import ora from 'ora';
 import { BaseGenerator } from './base-generator.js';
 import type { ProjectConfig } from '../config/schema.js';
 import { DockerComposeGenerator } from './docker-compose-generator.js';
+import { KubernetesGenerator } from './kubernetes-generator.js';
 
 /**
  * Express.js project generator
@@ -41,7 +42,14 @@ export class ExpressGenerator extends BaseGenerator {
         await dockerGenerator.generate();
       }
 
-      // 5. Create empty directories
+      // 5. Generate Kubernetes manifests if enabled
+      if (this.config.includeKubernetes) {
+        spinner.text = 'Generating Kubernetes manifests...';
+        const k8sGenerator = new KubernetesGenerator(this.config, this.projectPath);
+        await k8sGenerator.generate();
+      }
+
+      // 6. Create empty directories
       await this.createEmptyDirectories();
 
       spinner.succeed('Express.js project generated successfully!');
