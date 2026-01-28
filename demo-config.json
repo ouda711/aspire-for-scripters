@@ -1,0 +1,11 @@
+{
+  "name": "my-api",
+  "framework": "express",
+  "sqlDatabase": "postgresql",
+  "nosqlDatabases": ["redis"],
+  "includeAuth": true,
+  "includeDocker": true,
+  "includeKubernetes": true,
+  "includeTests": true,
+  "includeSwagger": true
+}

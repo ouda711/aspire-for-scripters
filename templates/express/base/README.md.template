@@ -59,6 +59,9 @@ API documentation will be available at `http://localhost:3000/api-docs`
 - `{{packageManager}} run dev` - Start development server
 - `{{packageManager}} run build` - Build for production
 - `{{packageManager}} start` - Start production server
+- `{{packageManager}} run dashboard` - Start Aspire Dashboard for monitoring services
+- `{{packageManager}} run dashboard:dev` - Start dashboard in development mode
+- `{{packageManager}} run dashboard:install` - Install dashboard dependencies
 - `{{packageManager}} run lint` - Lint code
 - `{{packageManager}} run format` - Format code
 {{#if includeTesting}}
@@ -79,7 +82,37 @@ src/
 ├── services/        # Business logic
 ├── utils/           # Utility functions
 └── types/           # TypeScript types
+aspire-dashboard/    # Aspire Dashboard for monitoring
+├── server.ts        # Dashboard server
+├── package.json     # Dashboard dependencies
+└── start.js         # Dashboard launcher
 ```
+
+## Aspire Dashboard
+
+This project includes an Aspire Dashboard for real-time monitoring of all services.
+
+### Starting the Dashboard
+
+```bash
+# Install dashboard dependencies (first time only)
+{{packageManager}} run dashboard:install
+
+# Start the dashboard
+{{packageManager}} run dashboard
+```
+
+The dashboard will be available at: **http://localhost:18888**
+
+### Features
+
+- 🎯 Real-time service monitoring
+- 📊 Service statistics and metrics
+- 🔄 Auto-discovery from docker-compose.yml
+- 📝 Log aggregation from all services
+- 🎨 Beautiful, responsive UI
+
+For more information, see the [Dashboard README](aspire-dashboard/README.md).
 
 ## License
 

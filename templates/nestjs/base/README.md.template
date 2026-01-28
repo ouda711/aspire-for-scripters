@@ -125,7 +125,53 @@ src/
 {{#if includeLogging}}
 └── logger/              # Logging module
 {{/if}}
+aspire-dashboard/        # Aspire Dashboard for monitoring
+├── server.ts            # Dashboard server
+├── package.json         # Dashboard dependencies
+└── start.js             # Dashboard launcher
 ```
+
+## Aspire Dashboard
+
+This project includes an Aspire Dashboard for real-time monitoring of all services.
+
+### Starting the Dashboard
+
+```bash
+# Install dashboard dependencies (first time only)
+{{#eq packageManager "npm"}}
+npm run dashboard:install
+{{/eq}}
+{{#eq packageManager "yarn"}}
+yarn dashboard:install
+{{/eq}}
+{{#eq packageManager "pnpm"}}
+pnpm dashboard:install
+{{/eq}}
+
+# Start the dashboard
+{{#eq packageManager "npm"}}
+npm run dashboard
+{{/eq}}
+{{#eq packageManager "yarn"}}
+yarn dashboard
+{{/eq}}
+{{#eq packageManager "pnpm"}}
+pnpm dashboard
+{{/eq}}
+```
+
+The dashboard will be available at: **http://localhost:18888**
+
+### Features
+
+- 🎯 Real-time service monitoring
+- 📊 Service statistics and metrics
+- 🔄 Auto-discovery from docker-compose.yml
+- 📝 Log aggregation from all services
+- 🎨 Beautiful, responsive UI
+
+For more information, see the [Dashboard README](aspire-dashboard/README.md).
 
 ## Environment Variables
 

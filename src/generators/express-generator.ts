@@ -4,6 +4,7 @@ import { BaseGenerator } from './base-generator.js';
 import type { ProjectConfig } from '../config/schema.js';
 import { DockerComposeGenerator } from './docker-compose-generator.js';
 import { KubernetesGenerator } from './kubernetes-generator.js';
+import { DashboardGenerator } from './dashboard-generator.js';
 
 /**
  * Express.js project generator
@@ -49,7 +50,12 @@ export class ExpressGenerator extends BaseGenerator {
         await k8sGenerator.generate();
       }
 
-      // 6. Create empty directories
+      // 6. Generate Aspire Dashboard
+      spinner.text = 'Generating Aspire Dashboard...';
+      const dashboardGenerator = new DashboardGenerator(this.config, this.projectPath);
+      await dashboardGenerator.generate();
+
+      // 7. Create empty directories
       await this.createEmptyDirectories();
 
       spinner.succeed('Express.js project generated successfully!');

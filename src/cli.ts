@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import figlet from 'figlet';
 import { initCommand } from './commands/init.js';
+import { devCommand } from './commands/dev.js';
 
 const program = new Command();
 
@@ -34,8 +35,9 @@ program
 program
   .command('dev')
   .description('Start all services in development mode')
-  .action(() => {
-    console.log(chalk.yellow('⚠️  Dev command - Implementation coming in later steps...'));
+  .option('-p, --path <path>', 'Project path')
+  .action(async (options) => {
+    await devCommand(options.path);
   });
 
 // Version info

@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-api
+  labels:
+    app: my-api
+    tier: application
+    framework: express
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-api
+  template:
+    metadata:
+      labels:
+        app: my-api
+        tier: application
+        framework: express
+    spec:
+      containers:
+        - name: my-api
+          image: my-api:latest
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: '3000'
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: my-api-config
+                  key: log-level
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: my-api-config
+                  key: postgres-host
+            - name: POSTGRES_PORT
+              value: '5432'
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: my-api-secret
+                  key: postgres-password
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: my-api-config
+                  key: redis-host
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3

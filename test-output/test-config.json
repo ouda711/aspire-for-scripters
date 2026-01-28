@@ -1,0 +1,18 @@
+{
+  "name": "test-dashboard-project",
+  "description": "Testing dashboard generation",
+  "framework": "express",
+  "sqlDatabase": "postgres",
+  "nosqlDatabases": [],
+  "includeAuth": false,
+  "includeSwagger": false,
+  "includeLogging": false,
+  "includeTesting": false,
+  "includeDocker": true,
+  "includeKubernetes": false,
+  "includeMessageQueue": false,
+  "includeCI": false,
+  "frontend": "none",
+  "monorepo": false,
+  "packageManager": "npm"
+}
